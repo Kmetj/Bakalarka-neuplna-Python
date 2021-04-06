@@ -1,0 +1,57 @@
+<html>
+<head>
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+
+<!-- this goes in the <head> -->
+<style>
+#map {
+    height: 600px;
+}
+</style>
+</head>
+<body>
+<!-- this goes in the <body> -->
+<div id="map"></div>
+<script>
+var mytiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+});
+// Initialise an empty map
+var map = L.map('map');
+//var marker = L.marker([51.51276,-0.1400097]).addTo(map);
+$.getJSON("./geo_data.json",function(data){
+	var myStyle={
+		radius:2,
+		fillColor:"red",
+		color:"red",
+		weight:1,
+		opacity:1,
+		fillOpacity:1
+	};
+	var geojson = L.geoJson(data,{
+		pointToLayer:function(feature,latlng){
+			return L.circleMarker(latlng,myStyle);
+		}
+	});
+	geojson.addTo(map)
+
+	var bounds_CZ = [[48.6735,12.7716],[50.8864,18.5504]];
+	var bounds_FR = [[44.0496,-5,0317],[49.4052,6.21826]];
+	var bounds_GE = [[47.7186,7.8],[53.9509,12.3706]];
+	var bounds_NO = [[55.1688,4.6142],[68.5539,21.892]];
+	
+	L.rectangle(bounds_CZ,{color:"red",weight:1}).addTo(map);
+	L.rectangle(bounds_FR,{color:"red",weight:1}).addTo(map);
+	L.rectangle(bounds_GE,{color:"red",weight:1}).addTo(map);
+	L.rectangle(bounds_NO,{color:"red",weight:1}).addTo(map);
+
+
+});
+// Add the tiles to the map, and initialise the view in the middle of Europe
+map.addLayer(mytiles).setView([50.5, 5.0], 5);
+</script>
+
+</body>
+</html>
